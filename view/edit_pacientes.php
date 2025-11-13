@@ -31,7 +31,7 @@ foreach ($campos as $key => $encabezado) {
 
             foreach ($camposPacientes as $key => $info) :
             ?>
-                <div class="form-group">
+               <div class="form-group">
                     <label class="fw-bold" for="<?= $key ?>"><?= $info['label'] ?></label>
                     <input id="<?= $key ?>" class="form-control" type="<?= $info['type'] ?>" name="<?= $key ?>" value="<?= htmlspecialchars($$key, ENT_QUOTES) ?>" />
                 </div>

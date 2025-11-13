@@ -50,7 +50,7 @@ class Turno
 		try {
 			$stmt = $this->conection->prepare($sql);
 			if (!$stmt) {
-				// 🔍 Muestra el error SQL real si el prepare falla
+				// Muestra el error SQL real si el prepare falla
 				die("Error en prepare(): " . $this->conection->error);
 			}
 
@@ -58,10 +58,10 @@ class Turno
 			$resultado = $stmt->get_result();
 			$turnos = $resultado->fetch_all(MYSQLI_ASSOC);
 
-			// ✅ Para depuración, mostrás cuántos turnos encontró
-			if (empty($turnos)) {
-				echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
-			}
+			// Para depuración, mostrás cuántos turnos encontró
+			//if (empty($turnos)) {
+			//	echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
+			//}
 
 			return $turnos;
 		} catch (Exception $e) {

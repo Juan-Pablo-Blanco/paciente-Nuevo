@@ -21,29 +21,27 @@ class Paciente
         ];
     }
 
-    /*    // Conexión
-    private function getConection()
-    {
-        $dbObj = new Db();
-        $this->conection = $dbObj->conection;
-    }
-*/
     private function getConection()
     {
         $dbObj = new Db();
         $this->conection = $dbObj->conection;
 
-        if (!$this->conection) {
-            echo "❌ No hay conexión a la BD";
-        } else {
-            echo "✅ Conectado correctamente"; // lo podés activar si querés verificar
-        }
     }
     // Obtener todos los pacientes (para el select en turnos)
     public function getTabla()
     {
         $this->getConection();
-        $sql = "SELECT id, nombre, apellido FROM pacientes ORDER BY apellido, nombre";
+
+        $sql = "SELECT 
+                id, 
+                nombre, 
+                apellido, 
+                fecha_nacimiento, 
+                telefono, 
+                adulto_responsable, 
+                motivo_consulta
+            FROM pacientes
+            ORDER BY apellido, nombre";
 
         $resultado = $this->conection->query($sql);
 
@@ -53,11 +51,6 @@ class Paciente
         }
 
         $data = $resultado->fetch_all(MYSQLI_ASSOC);
-
-        //echo "<pre style='background:#222;color:#0f0;padding:5px'>";
-        //echo "🔍 Resultado de getTabla():\n";
-        //print_r($data);
-        //echo "</pre>";
 
         return $data;
     }

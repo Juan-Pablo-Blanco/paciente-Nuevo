@@ -81,5 +81,3 @@ $pacientes = $dataToView['pacientes'] ?? [];
         </div>
     </form>
 </div>
-
-<?php print_r($pacientes); ?>

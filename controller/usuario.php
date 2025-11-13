@@ -1,5 +1,4 @@
 <?php
-
 require_once 'model/usuario.php';
 require_once 'model/rol.php';
 
@@ -19,55 +18,63 @@ class UsuarioController
 		$this->tablaObj1 = new Rol();
 	}
 
-	/**
-	 * Listado completo de la tabla (Usuarios)
-	 *
-	 * @return void
-	 */
+	/* Listar */
 	public function list()
 	{
 		$this->page_title = 'Listado de ' . $this->tabla;
-		return $this->tablaObj->getTabla();
+		return ["data" => $this->tablaObj->getTabla()];
 	}
 
-	/* trae para editar */
+	/* Editar o crear */
 	public function edit($id = null)
 	{
 		$this->page_title = 'Editar ' . $this->tabla;
 		$this->view = 'edit_' . $this->tabla;
+
 		if (isset($_GET["id"])) {
 			$id = $_GET["id"];
+			$data = $this->tablaObj->getTablaById($id);
 		} else {
 			$this->page_title = 'Crear ' . $this->tabla;
+			$data = [];
 		}
-		return $this->tablaObj->getTablaById($id);
+
+		return [
+			"data" => $data,
+			"dataRel1" => $this->tablaObj1->getTabla()
+		];
 	}
 
-	/* ingresar */
+	/* Iniciar sesión */
 	public function login()
 	{
 		$this->page_title = 'Ingresar ' . $this->tabla;
 		$this->view = 'login';
 		$data = $this->tablaObj->login($_POST);
+
 		if (isset($data["password"]) && password_verify($_POST["password"], $data['password'])) {
 			return $data;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
-	/* Create or update */
+	/* Guardar (crear o actualizar) */
 	public function save()
 	{
 		$this->view = 'edit_' . $this->tabla;
 		$this->page_title = 'Editar ' . $this->tabla;
+
 		$id = $this->tablaObj->save($_POST);
 		$result = $this->tablaObj->getTablaById($id);
 		$_GET["response"] = true;
-		return $result;
+
+		return [
+			"data" => $result,
+			"dataRel1" => $this->tablaObj1->getTabla()
+		];
 	}
 
-	/* Confirm to delete */
+	/* Confirmar eliminación */
 	public function confirmDelete()
 	{
 		$this->page_title = 'Eliminar ' . $this->tabla;
@@ -75,7 +82,7 @@ class UsuarioController
 		return $this->tablaObj->getTablaById($_GET["id"]);
 	}
 
-	/* Delete */
+	/* Eliminar */
 	public function delete()
 	{
 		$this->page_title = 'Listado de ' . $this->tabla;
@@ -83,17 +90,13 @@ class UsuarioController
 		return $this->tablaObj->deleteTablaById($_POST["id"]);
 	}
 
-	/* Campos con su descripción */
+	/* Campos */
 	public function getCampos()
 	{
 		return $this->tablaObj->getCampos();
 	}
 
-	/**
-	 * Listado completo de la tabla relacionada (Roles)
-	 *
-	 * @return void
-	 */
+	/* Tabla relacionada: Roles */
 	public function getTablaRel1()
 	{
 		return $this->tablaObj1->getTabla();

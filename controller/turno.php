@@ -18,11 +18,31 @@ class TurnoController
 
     // Listar turnos
     public function list()
-	{
-		$this->page_title = 'Listado de ' . $this->tabla;
-		return $this->tablaObj->getTabla();
-	}
+    {
+        $this->page_title = 'Listado de ' . $this->tabla;
 
+        $turnos = $this->tablaObj->getTabla();
+
+        //Depuración
+        //if (empty($turnos)) {
+        //    echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
+        //}
+
+        return ["data" => $turnos];
+    }
+
+    // Retorna los campos para la vista (necesario para listar.php)
+    public function getCampos()
+    {
+        return [
+            "id" => "ID",
+            "paciente_id" => "Paciente",
+            "fecha_turno" => "Fecha Turno",
+            "hora_turno" => "Hora Turno",
+            "obra_social" => "Obra Social",
+            "observaciones" => "Observaciones"
+        ];
+    }
 
     // Crear o editar turno
     public function edit($id = null)
@@ -34,7 +54,7 @@ class TurnoController
         $turnoData = $id ? $this->tablaObj->getTablaById($id) : [];
 
         // Traer todos los pacientes
-        require_once 'model/Paciente.php';
+        require_once 'model/paciente.php';
         $pacienteModel = new Paciente();
         $pacientes = $pacienteModel->getTabla();
 
@@ -44,12 +64,11 @@ class TurnoController
         ];
     }
 
-
     // Guardar turno (crear o actualizar)
     public function save()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $this->tablaObj->save($_POST);
+            $this->tablaObj->save($_POST);
             header("Location: index.php?controller=turno&action=list");
             exit();
         }
@@ -90,13 +109,11 @@ class TurnoController
         $result = $this->tablaObj->deleteTablaById($_POST["id"]);
 
         if ($result) {
-            // Redirige al listado con mensaje de éxito
-            header("Location: index.php?controller=turnos&action=list&response=true");
-            exit;
+            header("Location: index.php?controller=turno&action=list&response=true");
         } else {
-            // Redirige al listado con mensaje de error
-            header("Location: index.php?controller=turnos&action=list&response=false");
-            exit;
+            header("Location: index.php?controller=turno&action=list&response=false");
         }
+    
     }
 }
+

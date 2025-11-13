@@ -18,7 +18,7 @@
 		<input type="hidden" name="id" value="<?= htmlspecialchars($id) ?>">
 
 		<?php if (!empty($relaciones)): ?>
-			<!-- ⚠️ Tiene relaciones, no se puede eliminar -->
+			<!-- Tiene relaciones, no se puede eliminar -->
 			<div class="alert alert-danger">
 				<p><b>No es posible eliminar este paciente porque registra:</b></p>
 				<ul>
@@ -36,7 +36,7 @@
 			</div>
 
 		<?php else: ?>
-			<!-- ⚠️ No tiene relaciones, se puede eliminar -->
+			<!-- No tiene relaciones, se puede eliminar -->
 			<div class="alert alert-warning">
 				<p><b>¿Confirma que desea eliminar al paciente
 						<?= htmlspecialchars($apellido . ', ' . $nombre) ?>?</b></p>

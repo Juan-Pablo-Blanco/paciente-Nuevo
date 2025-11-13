@@ -21,72 +21,87 @@ class PacienteController
 	public function list()
 	{
 		$this->page_title = 'Listado de ' . $this->tabla;
-		return $this->tablaObj->getTabla();
-	}
 
-	// Crear o Editar
-	public function edit($id = null)
-	{
-		$this->page_title = 'Editar ' . $this->tabla;
-		$this->view = 'edit_' . $this->tabla;
-		if (isset($_GET["id"])) {
-			$id = $_GET["id"];
-		} else {
-			$this->page_title = 'Crear ' . $this->tabla;
+		$pacientes = $this->tablaObj->getTabla();
+
+		if (empty($pacientes)) {
+			echo "<div class='alert alert-warning m-2'>⚠️ No hay pacientes cargados en la base de datos.</div>";
 		}
-		return $this->tablaObj->getTablaById($id);
+
+		return ["data" => $pacientes];
 	}
 
-	// Crear o Actualizar
-	public function save()
+	public function getCampos()
 	{
-		$this->view = 'edit_' . $this->tabla;
-		$this->page_title = 'Editar ' . $this->tabla;
-		$id = $this->tablaObj->save($_POST);
-		$result = $this->tablaObj->getTablaById($id);
-		$_GET["response"] = true;
-		return $result;
-	}
-
-	// Confirmar Borrado
-	public function confirmDelete()
-	{
-		$this->page_title = 'Eliminar ' . $this->tabla;
-		$this->view = 'confirm_delete_pacientes';
-
-		$id = $_GET["id"];
-		$paciente = $this->tablaObj->getTablaById($id);
-
-		// Verificar relaciones (ejemplo: turnos)
-		$relaciones = [];
-		$turnosCount = $paciente['total_turnos'] ?? 0;
-		if ($turnosCount > 0) {
-			$relaciones[] = 'turnos';
-		}
 		return [
-			"data" => $paciente,
-			"relaciones" => $relaciones
+			"id" => "ID",
+			"nombre" => "Nombre",
+			"apellido" => "Apellido",
+			"fecha_nacimiento" => "Fecha de Nacimiento",
+			"telefono" => "Teléfono",
+			"adulto_responsable" => "Adulto Responsable",
+			"motivo_consulta" => "Motivo de Consulta"
 		];
 	}
 
-	//Borrar
-	public function delete()
-	{
-		$this->page_title = 'Listado de ' . $this->tabla;
-		$this->view = 'delete';
-		return $this->tablaObj->deleteTablaById($_POST["id"]);
-	}
+	// Crear o Editar
+	 public function edit($id = null)
+    {
+        $this->view = 'edit_pacientes';
+        $this->page_title = $id ? 'Editar paciente' : 'Crear paciente';
 
-	//Campos con su descripción
-	public function getCampos()
-	{
-		return $this->tablaObj->getCampos();
-	}
+        $pacienteData = $id ? $this->tablaObj->getTablaById($id) : [];
+
+        return ["data" => $pacienteData];
+    }
+
+    // Guardar (crear o actualizar)
+    public function save()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $this->tablaObj->save($_POST);
+            header("Location: index.php?controller=paciente&action=list");
+            exit();
+        }
+    }
+
+    // Confirmar eliminación
+    public function confirmDelete()
+    {
+        if (!isset($_GET["id"]) || empty($_GET["id"])) {
+            echo "Error: ID no recibido";
+            exit;
+        }
+
+        $this->view = 'confirm_delete_pacientes';
+        $this->page_title = 'Eliminar paciente';
+
+        $dataToView["data"] = $this->tablaObj->getTablaById($_GET["id"]);
+        $dataToView["campos"] = $this->getCampos();
+
+        return $dataToView;
+    }
+
+    // Eliminar
+    public function delete()
+    {
+        if (!isset($_POST["id"]) || empty($_POST["id"])) {
+            echo "Error: ID no recibido";
+            exit;
+        }
+
+        $result = $this->tablaObj->deleteTablaById($_POST["id"]);
+
+        header("Location: index.php?controller=paciente&action=list&response=" . ($result ? "true" : "false"));
+        exit;
+    }
+
 
 	//verifica si el paciente tiene turnos asociados
 	public function pacienteTieneTurnos($id)
-	
+
 	{
 		return $this->tablaObj->tieneTurnos($id);
 	}
+
 }
