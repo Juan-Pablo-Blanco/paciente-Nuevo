@@ -7,6 +7,7 @@ foreach ($campos as $key => $encabezado) {
 
 <div class="form-control">
 
+    <!-- Muestra mensajes de respuesta luego de guardar -->
     <?php if (isset($_GET["response"]) && $_GET["response"] === true) : ?>
         <div class="alert alert-success">
             Operación realizada correctamente. 
@@ -14,6 +15,7 @@ foreach ($campos as $key => $encabezado) {
         </div>
     <?php endif; ?>
 
+    <!-- Formulario para guardar o editar un paciente -->
     <form class="form" action="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=save" method="POST">
         <input type="hidden" name="id" value="<?= htmlspecialchars($id ?? '') ?>" />
         <div class="form-container">
@@ -29,6 +31,7 @@ foreach ($campos as $key => $encabezado) {
                 'motivo_consulta' => ['label' => 'Motivo de Consulta', 'type' => 'text']
             ];
 
+            // Renderiza cada campo del formulario
             foreach ($camposPacientes as $key => $info) :
             ?>
                <div class="form-group">
@@ -37,6 +40,7 @@ foreach ($campos as $key => $encabezado) {
                 </div>
             <?php endforeach; ?>
 
+            <!-- Botones Guardar y Cancelar -->
             <p></p>
             <input type="submit" value="Guardar" class="btn btn-primary" />
             <a class="btn btn-secondary" href="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=list">Cancelar</a>

@@ -26,7 +26,8 @@
 						<li><?= htmlspecialchars($rel, ENT_QUOTES) ?></li>
 					<?php endforeach; ?>
 				</ul>
-
+				
+				<!-- Datos del paciente -->
 				<p><b>Datos del paciente:</b></p>
 				<?php foreach ($campos as $key => $encabezado): ?>
 					<?php if (isset($paciente[$key])): ?>
@@ -41,6 +42,7 @@
 				<p><b>¿Confirma que desea eliminar al paciente
 						<?= htmlspecialchars($apellido . ', ' . $nombre) ?>?</b></p>
 
+				<!-- Muestra los datos del paciente a eliminar -->
 				<?php foreach ($campos as $key => $encabezado): ?>
 					<?php if (isset($paciente[$key])): ?>
 						<p><b><?= htmlspecialchars($encabezado) ?>:</b> <?= htmlspecialchars($paciente[$key]) ?></p>
@@ -51,6 +53,7 @@
 			<input type="submit" value="Eliminar" class="btn btn-danger" />
 		<?php endif; ?>
 
+		<!-- Boton para cancelar y volver al listado -->
 		<a class="btn btn-primary"
 			href="index.php?controller=<?= htmlspecialchars($_GET["controller"]) ?>&action=list">
 			Cancelar

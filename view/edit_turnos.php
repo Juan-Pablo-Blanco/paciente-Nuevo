@@ -4,12 +4,13 @@ foreach ($dataToView['data'] ?? [] as $key => $value) {
     $$key = $value;
 }
 
-// Pacientes para el select (traídos desde el controlador)
+// Pacientes para el select traidos desde el controlador
 $pacientes = $dataToView['pacientes'] ?? [];
 ?>
 
 <div class="container mt-4">
 
+    <!-- Mensaje de exito luego de guardar -->
     <?php if (isset($_GET["response"]) && $_GET["response"] === "true"): ?>
         <div class="alert alert-success">
             ✅ Operación realizada correctamente.
@@ -19,13 +20,15 @@ $pacientes = $dataToView['pacientes'] ?? [];
         </div>
     <?php endif; ?>
 
+    <!-- Formulario para guardar o editar un turno -->
     <form 
         action="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=save"
         method="POST"
         class="card p-4 shadow-sm"
     >
         <input type="hidden" name="id" value="<?= htmlspecialchars($id ?? '') ?>">
-
+        
+        <!-- Titulo dinamico segun modo edicion/creacion -->
         <h4 class="mb-3"><?= isset($id) ? "Editar Turno" : "Nuevo Turno" ?></h4>
 
         <?php
@@ -38,6 +41,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
             'observaciones' => ['label' => 'Observaciones', 'type' => 'textarea']
         ];
 
+        // Renderiza cada campo del formulario
         foreach ($camposTurnos as $key => $info): ?>
             <div class="mb-3">
                 <label class="form-label fw-bold" for="<?= $key ?>">
@@ -52,6 +56,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
                         rows="3"><?= htmlspecialchars($$key ?? '', ENT_QUOTES) ?></textarea>
 
                 <?php elseif ($info['type'] === 'select'): ?>
+                    <!-- Select de pacientes -->
                     <select id="<?= $key ?>" name="<?= $key ?>" class="form-select" required>
                         <option value="">Seleccione un paciente</option>
                         <?php foreach ($info['options'] as $pac): ?>
@@ -63,6 +68,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
                     </select>
 
                 <?php else: ?>
+                    <!-- Input de todos los demas campos -->
                     <input
                         type="<?= $info['type'] ?>"
                         id="<?= $key ?>"
@@ -75,6 +81,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
         <?php endforeach; ?>
 
         <div class="d-flex gap-2 mt-4">
+            <!-- Botones Guardar y Cancelar -->
             <button type="submit" class="btn btn-primary">💾 Guardar</button>
             <a href="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=list"
                class="btn btn-secondary">Cancelar</a>

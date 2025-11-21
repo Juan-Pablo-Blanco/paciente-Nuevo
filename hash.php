@@ -1,5 +1,5 @@
 <?php
-// La contraseña que querés usar
+// La contraseña que queres usar
 $password = "juan1234";
 
 // Generar el hash

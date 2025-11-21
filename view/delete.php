@@ -1,13 +1,17 @@
 <div class="row">
+	<!-- Si el modelo/controlador es 1, se ha eliminado correctamente -->
 	<?php if ($dataToView["data"] === "1" || $dataToView["data"] === 1): ?>
+		<!-- Muestra mensaje de exito -->
 		<div class="alert alert-success">
 			<?= htmlspecialchars($_GET["controller"]) ?> eliminado correctamente.
 			<br>
+			<!-- Boton para volver al listado -->
 			<a class="btn btn-primary mt-2" href="index.php?controller=<?= htmlspecialchars($_GET["controller"]) ?>&action=list">
 				Volver al listado
 			</a>
 		</div>
 	<?php else: ?>
+		<!-- Si no se ha eliminado, muestra el error -->
 		<div class="alert alert-danger">
 			<?= htmlspecialchars($_GET["controller"]) ?> <b>NO</b> eliminado.
 			
@@ -27,6 +31,7 @@
 			}
 			?>
 
+			<!-- Boton para volver al listado -->
 			<a class="btn btn-primary mt-2" href="index.php?controller=<?= htmlspecialchars($_GET["controller"]) ?>&action=list">
 				Volver al listado
 			</a>

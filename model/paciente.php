@@ -1,13 +1,16 @@
 <?php
 require_once 'model/db.php';
 
+// Clase Paciente
 class Paciente
 {
-
+    
+    // Atributos
     private $tabla = 'pacientes';
     private $conection;
     private $campos;
 
+    // Constructor
     public function __construct()
     {
         $this->campos = [
@@ -21,6 +24,7 @@ class Paciente
         ];
     }
 
+    //Get conexion
     private function getConection()
     {
         $dbObj = new Db();

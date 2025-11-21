@@ -2,12 +2,15 @@
 
 require_once 'model/db.php';
 
+// Clase Rol
 class Rol {
 
+	//Atributos
 	private $tabla = 'roles';
 	private $conection;
 	private $campos;
 
+	//Constructor
 	public function __construct() {
 		$this->campos= [
 			"id"=>"ID",
@@ -15,13 +18,13 @@ class Rol {
 		];
 	}
 
-	/* Set conection */
+	// Set conexion
 	public function getConection(){
 		$dbObj = new Db();
 		$this->conection = $dbObj->conection;
 	}
 
-	/* Get all */
+	// Trae todos los roles
 	public function getTabla(){
 		$this->getConection();
 		$sql = "SELECT * FROM ".$this->tabla;
@@ -37,7 +40,7 @@ class Rol {
 		}
 	}
 
-	/* Get by id */
+	// Trae un rol por id
 	public function getTablaById($id){
 		if(is_null($id)) return false;
 		$this->getConection();
@@ -49,29 +52,29 @@ class Rol {
 		return $resultado->fetch_assoc();
 	}
 
-	/* Save */
+	// Save
 	public function save($param){
 		$this->getConection();
 
-		/* Check if exists */
+		//Checkea si existe
 		$exists = false;
 		if(isset($param["id"]) and $param["id"] !=''){
 			$actual = $this->getTablaById($param["id"]);
 			if(isset($actual["id"])){
 				$exists = true;
-				/* Actual values */
+				//Valores actuales
 				foreach ($this->campos as $key => $value) {
 					$$key = $actual[$key];
 				}
 			}
 		}
 
-		/* Received values */
+		//Recibe valores
 		foreach ($this->campos as $key => $value) {
 			if (isset($param[$key])) $$key = $param[$key];
 		}
 
-		/* Database operations */
+		// Operaciones en la base de datos
 		if($exists){
 			$sql  = "UPDATE ".$this->tabla. " SET ";
 			$data=[];
@@ -91,9 +94,10 @@ class Rol {
 			try {
 				$stmt->execute($data);
 			} catch (Exception $e) {
-				// Error al actualizar: Seguramente este rol ya existe.
+				// Error al actualizar: Seguramente este rol ya existe
 			}
 		}else{
+			//Insert
 			$sql = "INSERT INTO ".$this->tabla." (";
 			$data = [];
 			foreach ($this->campos as $key => $value) {
@@ -112,14 +116,14 @@ class Rol {
 				$stmt->execute($data);
 				$id = $this->conection->insert_id;
 			} catch (Exception $e) {
-				//Error al insertar: Seguramente este rol ya existe.
+				//Error al insertar: Seguramente este rol ya existe
 				$id=0;
 			}
 		}
 		return $id;	
 	}
 
-	/* Delete by id */
+	// Delete por ID
 	public function deleteTablaById($id) {
 		$this->getConection();
 		$sql = "DELETE FROM ".$this->tabla. " WHERE id = ?";
@@ -132,6 +136,7 @@ class Rol {
 		}
 	}
 
+	// Trae los campos
 	public function getCampos(){
 		return $this->campos;
 	}

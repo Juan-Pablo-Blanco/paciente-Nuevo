@@ -4,7 +4,9 @@
 	if (isset($_POST["usuario"])) {
 		$usuario = $_POST["usuario"];
 		if ($dataToView["data"]) {
-			session_start();
+			session_start();+
+
+			// Se guardan los datos del usuario autenticado en variables de sesion
 			$_SESSION["usuarioID"] = $dataToView["data"]["id"];
 			$_SESSION["usuario"] = $dataToView["data"]["usuario"];
 			$_SESSION["rolID"] = $dataToView["data"]["id_rol"];
@@ -20,9 +22,9 @@
 		}
 	}
 	if (isset($_GET["logout"])) {
-		// Destruir todas las variables de sesión
+		// Destruir todas las variables de sesion
 		$_SESSION = array();
-		// Si se desea destruir la cookie de sesión, también se debe hacer.
+		// Si se desea destruir la cookie de sesion, tambien se debe hacer.
 		if (ini_get("session.use_cookies")) {
 			$params = session_get_cookie_params();
 			setcookie(
@@ -35,13 +37,14 @@
 				$params["httponly"]
 			);
 		}
-		// Finalmente, destruir la sesión
+		// Finalmente, destruir la sesion
 		session_destroy();
 		// Redireccionar al login
 		header('Location: index.php?controller=usuario&action=login');
 		exit;
 	}
 	?>
+	<!-- Formulario del login -->
 	<form class="form" action="index.php?controller=usuario&action=login" method="POST">
 		<div class="form-container">
 			<div class="form-group">
@@ -56,7 +59,7 @@
 			</div>
 			<p></p>
 			<input type="submit" value="Ingresar" class="btn btn-primary" />
-			<a class="btn btn-primary" href="index.php?controller=<?= $_GET["controller"] ?>&action=list">Cancelar</a>
+			<a class="btn btn-primary" href="index.php?controller=<?= $_GET["controller"] ?? 'usuario' ?>&action=list">Cancelar</a>
 	</form>
 </div>
 </div>

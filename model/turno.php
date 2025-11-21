@@ -1,8 +1,8 @@
 <?php
-// Conexión a la base de datos
+// Conexion a la base de datos
 require_once 'model/db.php';
 
-// Definición de la clase Turno
+// Definicion de la clase Turno
 class Turno
 {
 
@@ -127,6 +127,7 @@ class Turno
 			$stmt = $this->conection->prepare($sql);
 			$res = $stmt->execute($data);
 		} else {
+			//Insert
 			$sql = "INSERT INTO " . $this->tabla . " (";
 			$data = [];
 			foreach ($this->campos as $key => $value) {
@@ -161,6 +162,7 @@ class Turno
 		}
 	}
 
+	//Trae los campos
 	public function getCampos()
 	{
 		return $this->campos;

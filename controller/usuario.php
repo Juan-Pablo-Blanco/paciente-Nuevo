@@ -1,15 +1,19 @@
 <?php
+
 require_once 'model/usuario.php';
 require_once 'model/rol.php';
 
+// Se crea la clase UsuarioController
 class UsuarioController
 {
+	// Atributos
 	public $page_title;
 	public $view;
 	private $tabla = "usuarios";
 	public $tablaObj;
 	public $tablaObj1;
 
+	// Constructor
 	public function __construct()
 	{
 		$this->view = 'listar';
@@ -18,16 +22,17 @@ class UsuarioController
 		$this->tablaObj1 = new Rol();
 	}
 
-	/* Listar */
+	// Listar
 	public function list()
 	{
 		$this->page_title = 'Listado de ' . $this->tabla;
 		return ["data" => $this->tablaObj->getTabla()];
 	}
 
-	/* Editar o crear */
+	// Editar o crear 
 	public function edit($id = null)
 	{
+	
 		$this->page_title = 'Editar ' . $this->tabla;
 		$this->view = 'edit_' . $this->tabla;
 
@@ -45,7 +50,7 @@ class UsuarioController
 		];
 	}
 
-	/* Iniciar sesión */
+	// Iniciar sesion
 	public function login()
 	{
 		$this->page_title = 'Ingresar ' . $this->tabla;
@@ -58,7 +63,7 @@ class UsuarioController
 		return false;
 	}
 
-	/* Guardar (crear o actualizar) */
+	// Guardar (crear o actualizar)
 	public function save()
 	{
 		$this->view = 'edit_' . $this->tabla;
@@ -74,7 +79,7 @@ class UsuarioController
 		];
 	}
 
-	/* Confirmar eliminación */
+	// Confirmar eliminacion
 	public function confirmDelete()
 	{
 		$this->page_title = 'Eliminar ' . $this->tabla;
@@ -82,7 +87,7 @@ class UsuarioController
 		return $this->tablaObj->getTablaById($_GET["id"]);
 	}
 
-	/* Eliminar */
+	// Eliminar
 	public function delete()
 	{
 		$this->page_title = 'Listado de ' . $this->tabla;
@@ -90,13 +95,13 @@ class UsuarioController
 		return $this->tablaObj->deleteTablaById($_POST["id"]);
 	}
 
-	/* Campos */
+	// Campos
 	public function getCampos()
 	{
 		return $this->tablaObj->getCampos();
 	}
 
-	/* Tabla relacionada: Roles */
+	// Tabla relacionada: Roles
 	public function getTablaRel1()
 	{
 		return $this->tablaObj1->getTabla();

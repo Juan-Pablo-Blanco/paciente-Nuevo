@@ -1,3 +1,4 @@
+/* Se crea la tabla pacientes */
 CREATE TABLE `pacientes` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(40) NOT NULL,
@@ -9,6 +10,7 @@ CREATE TABLE `pacientes` (
     PRIMARY KEY (`id`)
 );
 
+/* Se crea la tabla turnos */
 CREATE TABLE `turnos` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `paciente_id` INT(11) NOT NULL,
@@ -22,12 +24,14 @@ CREATE TABLE `turnos` (
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+/* Se crea la tabla roles */
 CREATE TABLE `roles` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `rol` VARCHAR(30) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
+/* Se crea la tabla usuarios */
 CREATE TABLE `usuarios` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
     `usuario` VARCHAR(50) NOT NULL,

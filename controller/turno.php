@@ -1,14 +1,21 @@
 <?php
+//Incluye el modelo Turno
 require_once 'model/turno.php';
+
+//Incluye el modelo Paciente
 require_once 'model/paciente.php';
 
 class TurnoController
 {
+
+    // Atributos
     public $page_title;
     public $view;
     public $tablaObj;
+    //Nombre de la tabla en la base de datos
     private $tabla = "turnos";
 
+    // Constructor
     public function __construct()
     {
         $this->view = 'listar';
@@ -19,8 +26,10 @@ class TurnoController
     // Listar turnos
     public function list()
     {
+        //Titulo para la vista de la pagina
         $this->page_title = 'Listado de ' . $this->tabla;
 
+        //Obtiene los turnos desde el modelo
         $turnos = $this->tablaObj->getTabla();
 
         //Depuración
@@ -28,6 +37,7 @@ class TurnoController
         //    echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
         //}
 
+        //Retorna los turnos
         return ["data" => $turnos];
     }
 
@@ -47,17 +57,19 @@ class TurnoController
     // Crear o editar turno
     public function edit($id = null)
     {
+        //Titulo para la vista de la pagina
         $this->view = 'edit_turnos';
         $this->page_title = $id ? 'Editar turno' : 'Crear turno';
 
         // Datos del turno (si existe)
         $turnoData = $id ? $this->tablaObj->getTablaById($id) : [];
 
-        // Traer todos los pacientes
+        // Traer todos los pacientes para el select
         require_once 'model/paciente.php';
         $pacienteModel = new Paciente();
         $pacientes = $pacienteModel->getTabla();
 
+        // Retornar los datos del turno y la lista de pacientes
         return [
             'data' => $turnoData,
             'pacientes' => $pacientes
@@ -67,8 +79,13 @@ class TurnoController
     // Guardar turno (crear o actualizar)
     public function save()
     {
+        //Verifica que venga el formulario por POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            //Guarda el turno
             $this->tablaObj->save($_POST);
+
+            //Redirecciona a la vista de listado
             header("Location: index.php?controller=turno&action=list");
             exit();
         }
@@ -77,14 +94,17 @@ class TurnoController
     // Muestra la confirmación de eliminación
     public function confirmDelete()
     {
+        // Verificar si se recibio el ID por GET
         if (!isset($_GET["id"]) || empty($_GET["id"])) {
             echo "Error: ID no recibido";
             exit;
         }
 
+        // Vista para confirmar la eliminación
         $this->view = 'confirm_delete_turnos';
         $this->page_title = 'Eliminar turno';
 
+        // Obtener los datos del turno
         $dataToView["data"] = $this->tablaObj->getTablaById($_GET["id"]);
         $dataToView["campos"] = [
             "id" => "ID",
@@ -101,16 +121,21 @@ class TurnoController
     // Ejecuta la eliminación
     public function delete()
     {
+        // Verificar si se recibio el ID por POST 
         if (!isset($_POST["id"]) || empty($_POST["id"])) {
             echo "Error: ID no recibido";
             exit;
         }
 
+        //Elimina el turno que llega por POST
         $result = $this->tablaObj->deleteTablaById($_POST["id"]);
 
+        //Redirige con respuesta
         if ($result) {
+            //True
             header("Location: index.php?controller=turno&action=list&response=true");
         } else {
+            //False
             header("Location: index.php?controller=turno&action=list&response=false");
         }
     
