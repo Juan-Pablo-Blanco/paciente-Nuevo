@@ -1,7 +1,7 @@
 <?php
 
 //Incluye el modelo Paciente
-require_once 'model/Paciente.php';
+require_once 'model/paciente.php';
 
 // Se crea la clase PacienteController
 class PacienteController

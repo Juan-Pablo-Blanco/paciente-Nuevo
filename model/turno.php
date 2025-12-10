@@ -205,7 +205,7 @@ class Turno
 			$id = $this->conection->insert_id;
 		}
 
-		return ["ok" => true];
+		return true ;
 	}
 
 
