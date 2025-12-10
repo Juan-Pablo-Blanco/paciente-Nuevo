@@ -21,13 +21,12 @@ $pacientes = $dataToView['pacientes'] ?? [];
     <?php endif; ?>
 
     <!-- Formulario para guardar o editar un turno -->
-    <form 
+    <form
         action="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=save"
         method="POST"
-        class="card p-4 shadow-sm"
-    >
+        class="card p-4 shadow-sm">
         <input type="hidden" name="id" value="<?= htmlspecialchars($id ?? '') ?>">
-        
+
         <!-- Titulo dinamico segun modo edicion/creacion -->
         <h4 class="mb-3"><?= isset($id) ? "Editar Turno" : "Nuevo Turno" ?></h4>
 
@@ -74,8 +73,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
                         id="<?= $key ?>"
                         name="<?= $key ?>"
                         class="form-control"
-                        value="<?= htmlspecialchars($$key ?? '', ENT_QUOTES) ?>"
-                    >
+                        value="<?= htmlspecialchars($$key ?? '', ENT_QUOTES) ?>">
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
@@ -84,7 +82,7 @@ $pacientes = $dataToView['pacientes'] ?? [];
             <!-- Botones Guardar y Cancelar -->
             <button type="submit" class="btn btn-primary">💾 Guardar</button>
             <a href="index.php?controller=<?= htmlspecialchars($_GET["controller"] ?? '') ?>&action=list"
-               class="btn btn-secondary">Cancelar</a>
+                class="btn btn-secondary">Cancelar</a>
         </div>
     </form>
 </div>

@@ -32,11 +32,6 @@ class TurnoController
         //Obtiene los turnos desde el modelo
         $turnos = $this->tablaObj->getTabla();
 
-        //Depuración
-        //if (empty($turnos)) {
-        //    echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
-        //}
-
         //Retorna los turnos
         return ["data" => $turnos];
     }
@@ -76,21 +71,30 @@ class TurnoController
         ];
     }
 
-    // Guardar turno (crear o actualizar)
+    // Guardar turno
     public function save()
     {
-        //Verifica que venga el formulario por POST
+        //Verifica si el foormulario viene por POST
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
-            //Guarda el turno
-            $this->tablaObj->save($_POST);
 
-            //Redirecciona a la vista de listado
+            // Llama al metodo save() del modelo (tablaObj) enviando los datos del formulario
+
+            $resultado = $this->tablaObj->save($_POST);
+
+            // Si el modelo no devolvio true, significa que hubo un error
+            if ($resultado !== true) {
+
+                //Indica la vista para mostrar el error
+                $this->view = "error_turno";
+
+                return ["error" => $resultado["error"]];
+            }
+
+            // Si no hubo error, redirecciona a la vista de listado
             header("Location: index.php?controller=turno&action=list");
-            exit();
+            exit;
         }
     }
-
     // Muestra la confirmación de eliminación
     public function confirmDelete()
     {
@@ -138,7 +142,5 @@ class TurnoController
             //False
             header("Location: index.php?controller=turno&action=list&response=false");
         }
-    
     }
 }
-

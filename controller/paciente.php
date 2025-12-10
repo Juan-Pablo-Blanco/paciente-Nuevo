@@ -58,9 +58,9 @@ class PacienteController
     // Crear o Editar
     public function edit($id = null)
     {
-        
+
         $this->view = 'edit_pacientes'; // Vista del formulario 
-        
+
         //Titulo segun si Edita o Crea
         $this->page_title = $id ? 'Editar paciente' : 'Crear paciente';
 
@@ -76,7 +76,7 @@ class PacienteController
     {
         //Solo funciona si llega un POST desde el formulario
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            
+
             // hace el guardado o el Update
             $id = $this->tablaObj->save($_POST);
 

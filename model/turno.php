@@ -58,11 +58,6 @@ class Turno
 			$resultado = $stmt->get_result();
 			$turnos = $resultado->fetch_all(MYSQLI_ASSOC);
 
-			// Para depuración, mostrás cuántos turnos encontró
-			//if (empty($turnos)) {
-			//	echo "<div class='alert alert-warning m-2'>⚠️ No hay turnos cargados en la base de datos.</div>";
-			//}
-
 			return $turnos;
 		} catch (Exception $e) {
 			echo "<div class='alert alert-danger'>Error al obtener turnos: " . $e->getMessage() . "</div>";
@@ -86,33 +81,95 @@ class Turno
 		return $resultado->fetch_assoc();
 	}
 
+
 	//Save
 	public function save($param)
 	{
 		$this->getConection();
 
-		//Checkea si existe
+		
+		//Detectar si es edicion o alta
+		
+
 		$exists = false;
-		if (isset($param["id"]) and $param["id"] != '') {
+		$id = 0;  // Inicializar ID
+
+		if (!empty($param["id"])) {
 			$actual = $this->getTablaById($param["id"]);
-			if (isset($actual["id"])) {
+
+			if (!empty($actual["id"])) {
 				$exists = true;
-				//Valores actuales
+				$id = $actual["id"];
+
+				// Cargo valores actuales
 				foreach ($this->campos as $key => $value) {
 					$$key = $actual[$key];
 				}
 			}
 		}
 
-		//Valores recibidos
+		
+		//Cargar valores recibidos del formulario
+		
+
 		foreach ($this->campos as $key => $value) {
 			if (isset($param[$key])) $$key = $param[$key];
 		}
 
-		//Operaciones en la base de datos
+		// Normalizar 
+		$fecha_turno = trim($fecha_turno);
+		$hora_turno  = trim($hora_turno);
+
+		$fecha_actual = date("Y-m-d");
+		$hora_actual  = date("H:i");
+
+		
+		// Validacion de fecha pasada
+		
+
+		if (strtotime($fecha_turno) < strtotime($fecha_actual)) {
+			return ["error" => "fecha_pasada"];
+		}
+
+		
+		// Validacion de hora ya pasada (si es hoy)
+		
+
+		if ($fecha_turno == $fecha_actual && strtotime($hora_turno) <= strtotime($hora_actual)) {
+			return ["error" => "hora_pasada"];
+		}
+
+		
+		//Validacion de duplicado
+	
+
+		// Si estoy editando: excluir mi propio ID
+		$check_id = $id > 0 ? $id : 0;
+
+		$sql = "SELECT id FROM turnos
+            WHERE fecha_turno = ?
+            AND hora_turno  = ?
+            AND id != ?";
+
+		$stmt = $this->conection->prepare($sql);
+		$stmt->bind_param("ssi", $fecha_turno, $hora_turno, $check_id);
+		$stmt->execute();
+
+		$result = $stmt->get_result();
+
+		if ($result->fetch_assoc()) {
+			return ["error" => "duplicado"];
+		}
+
+		
+		//Guardar (UPDATE o INSERT)
+		
 		if ($exists) {
+
+			// UPDATE
 			$sql  = "UPDATE " . $this->tabla . " SET ";
 			$data = [];
+
 			foreach ($this->campos as $key => $value) {
 				if ($value !== "ID") {
 					if (count($data) > 0) $sql .= ", ";
@@ -122,32 +179,36 @@ class Turno
 					$id = $$key;
 				}
 			}
+
 			$data[] = $id;
 			$sql .= " WHERE id = ?";
+
 			$stmt = $this->conection->prepare($sql);
-			$res = $stmt->execute($data);
+			$stmt->execute($data);
 		} else {
-			//Insert
+
+			// INSERT
 			$sql = "INSERT INTO " . $this->tabla . " (";
 			$data = [];
+
 			foreach ($this->campos as $key => $value) {
 				if (count($data) > 0) $sql .= ", ";
 				$sql .= $key;
 				$data[] = $$key;
 			}
-			$sql .= ") VALUES (";
-			for ($i = 0; $i < count($data); $i++) {
-				if ($i > 0) $sql .= ", ";
-				$sql .= "?";
-			}
-			$sql .= ")";
+
+			$sql .= ") VALUES (" . str_repeat("?, ", count($data) - 1) . "?)";
+
 			$stmt = $this->conection->prepare($sql);
 			$stmt->execute($data);
+
 			$id = $this->conection->insert_id;
 		}
 
-		return $id;
+		return ["ok" => true];
 	}
+
+
 
 	//Borrar por id
 	public function deleteTablaById($id)

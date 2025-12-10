@@ -20,7 +20,7 @@ if (!$logueado && !$esLogin) {
     exit;
 }
 
-//
+
 // Inicializar variables
 $rolID = $_SESSION["rolID"] ?? 0;
 
@@ -79,7 +79,6 @@ if (method_exists($controllerObj, $action)) {
     ) {
         $dataToView["dataRel1"] = $controllerObj->getTablaRel1();
     }
-
 } else {
     die("❌ Error: La acción <b>$action</b> no existe en el controlador <b>$controllerName</b>.");
 }
@@ -88,4 +87,3 @@ if (method_exists($controllerObj, $action)) {
 require_once 'view/template/header.php';
 require_once 'view/' . $controllerObj->view . '.php';
 require_once 'view/template/footer.php';
-?>
