@@ -18,16 +18,35 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
 
-                <?php 
-                    // Controller y accion actuales
-                    $ctrl = $_GET["controller"] ?? '';
-                    $action = $_GET["action"] ?? '';
+                <?php
+                // Controller y accion actuales
+                $ctrl = $_GET["controller"] ?? '';
+                $action = $_GET["action"] ?? '';
                 ?>
 
                 <!-- Titulo de gestion dinamico -->
-                <h3>
-                    Gestión de <?= $ctrl . ($ctrl == "rol" ? "e" : "") ?>s
-                </h3>
+                <?php
+                function plural($txt)
+                {
+                    // Plurales especiales
+                    if ($txt === "rol") {
+                        return "roles";
+                    }
+
+                    // Evitar duplicar 's' si el controller ya termina en s
+                    if (str_ends_with($txt, 's')) {
+                        return $txt;
+                    }
+
+                    return $txt . "s";
+                }
+                ?>
+
+                <!-- Mostrar el titulo solo si existe un controller -->
+
+                <?php if (!empty($ctrl)) { ?>
+                    <h3>Gestión de <?= plural($ctrl) ?></h3>
+                <?php } ?>
 
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
@@ -53,9 +72,9 @@
                                         <?= $txtBoton . ($txtBoton == "rol" ? "e" : "") ?>s
                                     </a>
                                 </li>
-                        <?php 
+                        <?php
                             }
-                        } 
+                        }
                         ?>
 
                         <!-- Boton Login / Logout -->
